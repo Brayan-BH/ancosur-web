@@ -410,6 +410,8 @@ export default function RootLayout({
 
         <Footer />
 
+        <Analytics />
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
