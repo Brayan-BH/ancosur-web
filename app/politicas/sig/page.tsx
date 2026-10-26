@@ -38,7 +38,7 @@ export default function PoliticaSIGPage() {
         </header>
 
         <iframe
-          src="/assets/politicas/sig-politica.pdf#toolbar=0&navpanes=0&scrollbar=1"
+          src="/assets/politicas/sig-alcancev3.pdf#toolbar=0&navpanes=0&scrollbar=1"
           title="Política SIG Ancosur"
           className={styles.viewer}
         />

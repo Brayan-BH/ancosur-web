@@ -38,7 +38,7 @@ export default function AlcanceSIGPage() {
         </header>
 
         <iframe
-          src="/assets/politicas/sig-alcancev2.pdf#toolbar=0&navpanes=0&scrollbar=1"
+          src="/assets/politicas/sig-alcancev3.pdf#toolbar=0&navpanes=0&scrollbar=1"
           title="Alcance SIG Ancosur"
           className={styles.viewer}
         />
