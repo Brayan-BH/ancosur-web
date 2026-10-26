@@ -15,7 +15,10 @@ import ContactForm from "@/components/ContactForm";
 import FAQSection from "@/components/FAQSection";
 import HeroAncosur from "@/components/hero/HeroAncosur";
 import HoldingSection from "@/components/HoldingSection";
-import PromoLeadPopup from "@/components/PromoLeadPopup";
+import CampaignPopupLazy from "@/components/campaign-popup/CampaignPopupLazy";
+import HeroFold from "@/components/home/HeroFold";
+import PromoStrip from "@/components/home/PromoStrip";
+import { getActivePromotions } from "@/app/promociones/data";
 import TrustStatsTestimonials from "@/components/TrustStatsTestimonials";
 import FeaturedProjects from "@/components/home/FeaturedProjects";
 import FloatingPromo from "@/components/FloatingPromo/FloatingPromo";
@@ -188,7 +191,34 @@ export const metadata: Metadata = {
    PÁGINA PRINCIPAL
 ========================================================= */
 
+/* Se regenera cada hora para mostrar solo las
+   promociones vigentes (ver app/promociones/data.ts). */
+export const revalidate = 3600;
+
 export default function Home() {
+  const promotions = getActivePromotions();
+
+  /* Popup: la campaña vigente más importante */
+  const popupSource = ["depaween", "showroom", "familia-ancosur"]
+    .map((id) => promotions.find((promotion) => promotion.id === id))
+    .find(Boolean);
+
+  const popupPromotion = popupSource
+    ? {
+        id: popupSource.id,
+        name: popupSource.name,
+        eyebrow: popupSource.eyebrow,
+        title: popupSource.title,
+        highlight: popupSource.highlight,
+        summary: popupSource.summary,
+        image: popupSource.image,
+        imageAlt: popupSource.imageAlt,
+        imageWidth: popupSource.imageWidth,
+        imageHeight: popupSource.imageHeight,
+        validityLabel: popupSource.validityLabel,
+      }
+    : null;
+
   const homePageJsonLd = {
     "@context":
       "https://schema.org",
@@ -278,12 +308,16 @@ export default function Home() {
 
   return (
     <>
-      <PromoLeadPopup />
+      <FloatingPromo href="/promociones" />
 
-      <FloatingPromo href="/promociones" />   
+      <CampaignPopupLazy promotion={popupPromotion} />
 
       <main id="main-content">
-        <HeroAncosur />
+        <HeroFold>
+          <HeroAncosur />
+
+          <PromoStrip promotions={promotions} />
+        </HeroFold>
 
         <FeaturedProjects />
 
