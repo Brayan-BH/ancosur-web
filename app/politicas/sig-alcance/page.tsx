@@ -28,7 +28,7 @@ export default function AlcanceSIGPage() {
           <h1>Alcance del Sistema Integrado de Gestión</h1>
 
           <a
-            href="/assets/politicas/sig-alcancev2.pdf"
+            href="/assets/politicas/sig-alcancev3.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.download}

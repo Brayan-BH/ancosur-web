@@ -28,7 +28,7 @@ export default function PoliticaSIGPage() {
           <h1>Política del Sistema Integrado de Gestión</h1>
 
           <a
-            href="/assets/politicas/sig-politica.pdf"
+            href="/assets/politicas/sig-politica3.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.download}
@@ -38,7 +38,7 @@ export default function PoliticaSIGPage() {
         </header>
 
         <iframe
-          src="/assets/politicas/sig-alcancev3.pdf#toolbar=0&navpanes=0&scrollbar=1"
+          src="/assets/politicas/sig-politica3.pdf#toolbar=0&navpanes=0&scrollbar=1"
           title="Política SIG Ancosur"
           className={styles.viewer}
         />
