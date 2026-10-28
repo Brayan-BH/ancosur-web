@@ -12,6 +12,7 @@ export const clubBenefits: ClubBenefit[] = [
  // =========================================================
   // NUEVOS CONVENIOS
   // =========================================================
+  
  {
     category: "Equipamiento",
     name: "Sole",
@@ -220,6 +221,20 @@ export const clubBenefits: ClubBenefit[] = [
       "Aplican términos y condiciones según la marca aliada.",
     termsHref:
       "/assets/benefits/terms/jeldic.pdf",
+  },
+
+  {
+    category: "Mascotas",
+    name: "Clínica Veterinaria Nikko",
+    discount: "Hasta 20%",
+    image:
+      "/assets/benefits/club/veterinaria_nikko.webp",
+    description:
+      "20% de descuento en consultas y grooming, 15% en vacunación, desparasitación y profilaxis dental, y 10% en cirugías y esterilizaciones.",
+    terms:
+      "Aplican los términos y condiciones del convenio entre la Clínica Veterinaria Nikko y ANCOSUR.",
+    termsHref:
+      "/assets/benefits/terms/veterinaria_nikko.pdf",
   },
 
   
