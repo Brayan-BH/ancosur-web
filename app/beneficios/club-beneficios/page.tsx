@@ -3,7 +3,8 @@ import { clubBenefits, type ClubBenefit } from "../data/clubBenefits";
 
 import { createSeoMetadata } from "@/src/seo";
 
-export const revalidate = 10;
+/* Sin caché: lo que marketing publica u oculta en el CRM se ve al recargar la página. */
+export const dynamic = "force-dynamic";
 
 export const metadata = createSeoMetadata({
   title: "Club de Beneficios Ancosur",
@@ -35,11 +36,11 @@ type BeneficioCRM = {
 };
 
 /* Los beneficios los gestiona marketing en el CRM (Página web → Club de beneficios): publicar u ocultar se ve en la web
-   en unos segundos. Si el CRM no responde, se muestran los de respaldo escritos en el código. */
+   al recargar. Si el CRM no responde, se muestran los de respaldo escritos en el código. */
 async function obtenerBeneficios(): Promise<ClubBenefit[]> {
   if (!BACKEND_URL) return clubBenefits;
   try {
-    const res = await fetch(`${BACKEND_URL}/api/web/beneficios`, { next: { revalidate: 10 } });
+    const res = await fetch(`${BACKEND_URL}/api/web/beneficios`, { cache: "no-store" });
     const json = (await res.json()) as { success?: boolean; data?: BeneficioCRM[] };
     /* Una lista vacía es válida (marketing ocultó todos): el respaldo es solo para cuando el CRM no responde. */
     if (!res.ok || json.success !== true || !Array.isArray(json.data)) return clubBenefits;
