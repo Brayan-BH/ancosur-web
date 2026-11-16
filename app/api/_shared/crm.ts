@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+import { proxyPost } from "./proxyPost";
+
 /**
  * Registro de leads de la web en el CRM nuevo (API de Ancosur Leads).
  *
@@ -10,6 +12,9 @@ import { NextResponse } from "next/server";
  * Variables de entorno (servidor):
  *   CRM_API_URL  URL pública de la API del CRM nuevo (por defecto https://api.ancosur.com)
  *   CRM_API_KEY  una de las claves de INTEGRATION_API_KEYS de esa API
+ *
+ * Respaldo: si falta la clave, el CRM la rechaza o no responde, el lead se envía por el camino anterior (LEADS_API_URL)
+ * para no perderlo. Los errores de datos del cliente (nombre o celular inválidos) no van al respaldo.
  */
 
 type Datos = Record<string, unknown>;
@@ -110,11 +115,13 @@ export async function registrarLead(request: Request, formulario: string): Promi
   if (!lead.nombre) return respuesta(422, false, "Escribe tu nombre.");
   if (!lead.telefono && !lead.email) return respuesta(422, false, "Escribe un celular de 9 dígitos o un correo válido.");
 
+  const respaldo = () =>
+    proxyPost(new Request(request.url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(cuerpo) }));
   const url = (process.env.CRM_API_URL?.trim() || "https://api.ancosur.com").replace(/\/+$/, "");
   const clave = process.env.CRM_API_KEY?.trim();
-  if (!url || !clave) {
-    console.error("[CRM] Falta configurar CRM_API_URL o CRM_API_KEY: el lead no se pudo registrar.", { formulario });
-    return respuesta(503, false, "No pudimos registrar tus datos en este momento. Escríbenos por WhatsApp, por favor.");
+  if (!clave) {
+    console.error("[CRM] Falta configurar CRM_API_KEY: el lead va por el camino anterior.", { formulario });
+    return respaldo();
   }
 
   const control = new AbortController();
@@ -131,6 +138,10 @@ export async function registrarLead(request: Request, formulario: string): Promi
     const r = datos?.data?.resultados?.[0];
     // creado = lead nuevo; reingreso = ya existía y se registra la nueva consulta; duplicado = reenvío del mismo formulario.
     const ok = res.ok && !!r && ["creado", "reingreso", "duplicado"].includes(r.resultado ?? "");
+    if (!ok && (res.status === 401 || res.status === 403 || res.status >= 500)) {
+      console.error("[CRM] El CRM no está disponible: el lead va por el camino anterior.", { formulario, status: res.status });
+      return respaldo();
+    }
     if (!ok) {
       console.error("[CRM] El CRM no registró el lead.", { formulario, status: res.status, resultado: r?.resultado, errores: r?.errores ?? datos?.error?.message });
       return respuesta(res.status === 401 ? 502 : 422, false, r?.errores?.[0] ?? "Revisa tu nombre, celular y correo, por favor.", {
@@ -144,8 +155,8 @@ export async function registrarLead(request: Request, formulario: string): Promi
       crm: { success: true, lead_id: r.lead_id ?? null, estado: r.resultado, http_status: res.status, message: "Lead registrado en el CRM." },
     });
   } catch (e) {
-    console.error("[CRM] No se pudo conectar con el CRM.", { formulario, error: e instanceof Error ? e.message : String(e) });
-    return respuesta(502, false, "No pudimos registrar tus datos en este momento. Inténtalo de nuevo o escríbenos por WhatsApp.");
+    console.error("[CRM] No se pudo conectar con el CRM: el lead va por el camino anterior.", { formulario, error: e instanceof Error ? e.message : String(e) });
+    return respaldo();
   } finally {
     clearTimeout(plazo);
   }
