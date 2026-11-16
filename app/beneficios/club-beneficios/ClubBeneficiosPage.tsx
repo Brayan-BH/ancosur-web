@@ -2,10 +2,12 @@
 
 import Image from "next/image";
 
-import { clubBenefits } from "../data/clubBenefits";
+import { isOptimizableImage } from "@/src/seo";
+
+import type { ClubBenefit } from "../data/clubBenefits";
 import styles from "./ClubBeneficiosPage.module.css";
 
-export default function ClubBeneficiosPage() {
+export default function ClubBeneficiosPage({ beneficios }: { beneficios: ClubBenefit[] }) {
   return (
     <>
 
@@ -25,7 +27,7 @@ export default function ClubBeneficiosPage() {
           </div>
 
           <div className={styles.grid}>
-            {clubBenefits.map((item) => (
+            {beneficios.map((item) => (
               <article
                 key={item.name}
                 className={styles.card}
@@ -35,6 +37,7 @@ export default function ClubBeneficiosPage() {
                     src={item.image}
                     alt={`Beneficio Ancosur - ${item.name}`}
                     fill
+                    unoptimized={!isOptimizableImage(item.image)}
                     sizes="
                       (max-width: 768px) 100vw,
                       (max-width: 1050px) 50vw,

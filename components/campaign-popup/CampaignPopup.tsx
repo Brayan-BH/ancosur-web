@@ -29,7 +29,7 @@ import styles from "./CampaignPopup.module.css";
    - Móvil: tarjeta compacta abajo; "Quiero información"
      despliega el formulario (formato aceptado por Google).
    El envío usa el mismo formato que el resto de formularios
-   (POST /api/formularios) y el evento lead_form_submit.
+   (POST /api/leads, que registra el lead en el CRM) y el evento lead_form_submit.
 ========================================================= */
 
 type InterestType = "Departamento" | "Lote";
@@ -45,10 +45,6 @@ type FormState = {
 
 type FormErrors = Partial<Record<keyof FormState | "form", string>>;
 
-const API_URL = (
-  process.env.NEXT_PUBLIC_API_URL ||
-  "https://ancosur-api-production.up.railway.app"
-).replace(/\/+$/, "");
 
 const INITIAL_FORM: FormState = {
   fullName: "",
@@ -266,7 +262,7 @@ export default function CampaignPopup({
     setIsSending(true);
 
     try {
-      const response = await fetch(`${API_URL}/api/formularios`, {
+      const response = await fetch("/api/leads", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

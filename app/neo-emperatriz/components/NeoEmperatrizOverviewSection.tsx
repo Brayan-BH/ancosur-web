@@ -664,7 +664,7 @@ export default function NeoEmperatrizOverviewSection() {
 
     const response =
       await fetch(
-        "https://ancosur-api-production.up.railway.app/api/formularios",
+        "/api/leads",
         {
           method: "POST",
 

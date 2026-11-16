@@ -11,7 +11,7 @@ import type {
 
 const BACKEND_URL =
   process.env.NEXT_PUBLIC_BACKEND_URL ||
-  "https://ancosur-api-production.up.railway.app";
+  "https://api.ancosur.com";
 
 type ListarParams = {
   activo?: boolean;
@@ -184,4 +184,13 @@ export function getProjectHref(
   }
 
   return ruta.startsWith("/") ? ruta : `/${ruta}`;
+}
+/**
+ * Texto de dormitorios para las tarjetas. El dato puede venir completo («1, 2 y 3 Dorm.»), solo con números («2 y 3»)
+ * o con otra palabra («Lote»): solo se agrega «Dorm.» cuando hace falta (antes salía «2 Dorm. Dorm.» o «Lote Dorm.»).
+ */
+export function getDormitoriosLabel(value?: string | null): string {
+  const texto = value?.trim() ?? "";
+  if (!texto) return "";
+  return /dorm/i.test(texto) || !/\d/.test(texto) ? texto : `${texto} Dorm.`;
 }

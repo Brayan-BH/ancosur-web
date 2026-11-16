@@ -234,6 +234,9 @@ export function isOptimizableImage(
     url.startsWith("/") ||
     url.startsWith(
       "https://ancosur-api-production.up.railway.app/api/",
-    )
+    ) ||
+    /* CRM nuevo (proyectos y beneficios). En local la API es localhost: Next no optimiza IP privadas. */
+    url.startsWith("https://api.ancosur.com/api/web/") ||
+    url.startsWith("https://api-dev.ancosur.com/api/web/")
   );
 }

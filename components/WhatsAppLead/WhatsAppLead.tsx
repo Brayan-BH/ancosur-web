@@ -26,7 +26,7 @@ import styles from "./WhatsAppLead.module.css";
 ========================================================= */
 
 const API_URL =
-  "https://ancosur-api-production.up.railway.app/api/formularios";
+  "/api/leads";
 
 const REQUEST_TIMEOUT =
   20000;

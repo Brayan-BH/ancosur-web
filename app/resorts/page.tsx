@@ -8,6 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
 import {
+  getDormitoriosLabel,
   getProjectAssetUrl,
   getProjectHref,
   ProyectosWebAPI,
@@ -316,7 +317,7 @@ function ProjectCard({
               <span className={styles.detail}>
                 <BedIcon />
                 <span>
-                  {project.dormitorios} Dorm.
+                  {getDormitoriosLabel(project.dormitorios)}
                 </span>
               </span>
             )}

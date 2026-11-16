@@ -1,6 +1,7 @@
 import type { ProyectoWeb, ProyectosResponse } from "@/src/types/proyectoWeb";
 
-const DEFAULT_BACKEND_URL = "https://ancosur-api-production.up.railway.app";
+/* Proyectos de la web: los gestiona marketing en el CRM (Página web → Proyectos). */
+const DEFAULT_BACKEND_URL = "https://api.ancosur.com";
 export const BACKEND_URL = (process.env.NEXT_PUBLIC_BACKEND_URL || DEFAULT_BACKEND_URL).replace(/\/+$/, "");
 
 export type ProyectoFilters = {

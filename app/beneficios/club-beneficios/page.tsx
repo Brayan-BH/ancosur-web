@@ -1,4 +1,5 @@
 import ClubBeneficiosPage from "./ClubBeneficiosPage";
+import { clubBenefits, type ClubBenefit } from "../data/clubBenefits";
 
 import { createSeoMetadata } from "@/src/seo";
 
@@ -19,6 +20,41 @@ export const metadata = createSeoMetadata({
   ],
 });
 
-export default function Page() {
-  return <ClubBeneficiosPage />;
+const BACKEND_URL = (process.env.NEXT_PUBLIC_BACKEND_URL || "https://api.ancosur.com").replace(/\/+$/, "");
+
+type BeneficioCRM = {
+  categoria: string;
+  nombre: string;
+  descuento: string;
+  descripcion: string;
+  condiciones: string | null;
+  imagen_url: string | null;
+  terminos_url: string | null;
+};
+
+/* Los beneficios los gestiona marketing en el CRM (Página web → Club de beneficios). Si el CRM no responde, se
+   muestran los de respaldo escritos en el código para que la página nunca quede vacía. */
+async function obtenerBeneficios(): Promise<ClubBenefit[]> {
+  if (!BACKEND_URL) return clubBenefits;
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/web/beneficios`, { next: { revalidate: 60 } });
+    const json = (await res.json()) as { success?: boolean; data?: BeneficioCRM[] };
+    if (!res.ok || json.success !== true || !json.data?.length) return clubBenefits;
+    const absoluta = (url: string | null) => (url ? (url.startsWith("http") ? url : `${BACKEND_URL}${url}`) : "");
+    return json.data.map((b) => ({
+      category: b.categoria,
+      name: b.nombre,
+      discount: b.descuento,
+      image: absoluta(b.imagen_url) || "/assets/benefits/club/placeholder.webp",
+      description: b.descripcion,
+      terms: b.condiciones ?? "",
+      termsHref: absoluta(b.terminos_url),
+    }));
+  } catch {
+    return clubBenefits;
+  }
+}
+
+export default async function Page() {
+  return <ClubBeneficiosPage beneficios={await obtenerBeneficios()} />;
 }

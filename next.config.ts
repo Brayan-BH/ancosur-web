@@ -30,6 +30,10 @@ const nextConfig: NextConfig = {
         hostname: "ancosur-api-production.up.railway.app",
         pathname: "/api/**",
       },
+      /* CRM nuevo: proyectos (producción, dev y local) */
+      { protocol: "https", hostname: "api.ancosur.com", pathname: "/api/web/**" },
+      { protocol: "https", hostname: "api-dev.ancosur.com", pathname: "/api/web/**" },
+      { protocol: "http", hostname: "localhost", port: "5000", pathname: "/api/web/**" },
     ],
 
     /* Las imágenes optimizadas se cachean 30 días en la CDN */

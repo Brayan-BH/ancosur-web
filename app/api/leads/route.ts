@@ -1,12 +1,8 @@
-import {
-  proxyPost,
-} from "../_shared/proxyPost";
+import { registrarLead } from "../_shared/crm";
 
-export const dynamic =
-  "force-dynamic";
+export const dynamic = "force-dynamic";
 
-export async function POST(
-  request: Request,
-) {
-  return proxyPost(request);
+/** Registra el lead en el CRM nuevo (ver _shared/crm.ts). */
+export async function POST(request: Request) {
+  return registrarLead(request, "Formulario web");
 }

@@ -309,6 +309,11 @@ export default function JobApplicationForm({
       "cv",
       cv
     );
+    /* Ley N.º 29733: el formulario exige aceptar el tratamiento de datos; se envía para que quede registrado. */
+    payload.append(
+      "consentimiento",
+      "true"
+    );
 
     payload.append(
       "ruta_pagina",

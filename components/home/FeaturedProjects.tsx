@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 
 import {
+  getDormitoriosLabel,
   getProjectAssetUrl,
   getProjectHref,
   ProyectosWebAPI,
@@ -457,10 +458,9 @@ export default function FeaturedProjects({
                                 <BedIcon />
 
                                 <span>
-                                  {
+                                  {getDormitoriosLabel(
                                     project.dormitorios
-                                  }{" "}
-                                  Dorm.
+                                  )}
                                 </span>
                               </span>
                             )}
